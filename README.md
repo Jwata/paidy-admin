@@ -1,7 +1,12 @@
-# Play sample
-this is an application for play frameworkd's exersise
+# Paiyd assignment
+this is an application for paidy assignment
 
-# Run
+## Setup database
+```
+postgresql> CREATE DATABASE paidy_admin;
+```
+
+## Run
 ```
 sbt run
 ```
