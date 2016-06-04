@@ -1,14 +1,18 @@
 package com.paidy.controllers
 
 import javax.inject._
+import akka.actor.ActorSystem
+import com.paidy.service.ConsumerService
 import play.api._
 import play.api.mvc._
 
-@Singleton
-class ConsumersController @Inject() extends Controller {
+import scala.concurrent.ExecutionContext
 
-  def overview = Action {
-    Ok("Consumers Overview")
+@Singleton
+class ConsumersController @Inject()(actorSystem: ActorSystem)(implicit exec: ExecutionContext) extends Controller {
+
+  def overview = Action.async {
+    ConsumerService.list.map { list => Ok(list.toString) }
   }
 
 }
