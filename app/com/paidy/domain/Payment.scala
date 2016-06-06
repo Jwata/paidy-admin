@@ -1,5 +1,7 @@
 package com.paidy.domain
 
+import java.sql.Timestamp
+
 import org.joda.time.DateTime
 
 case class Payment(
@@ -10,9 +12,11 @@ case class Payment(
 
   consumerId: String,
 
-  createdAt: DateTime,
+//  createdAt: DateTime,
+  createdAt: Timestamp,
 
-  updatedAt: DateTime,
+//  updatedAt: DateTime,
+  updatedAt: Timestamp,
 
   amount: BigDecimal,
 

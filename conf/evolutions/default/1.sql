@@ -8,9 +8,9 @@ CREATE TABLE "consumers" (
     "name" VARCHAR,
     "email" VARCHAR NOT NULL,
     "phone" VARCHAR NOT NULL,
-    "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "test" boolean NOT NULL
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "test" BOOLEAN NOT NULL
 );
 
 INSERT INTO "consumers" ("entity_id", "status", "name", "email", "phone", "test") VALUES
@@ -20,4 +20,4 @@ INSERT INTO "consumers" ("entity_id", "status", "name", "email", "phone", "test"
 
 # --- !Downs
 
-DROP TABLE consumers;
+DROP TABLE "consumers";

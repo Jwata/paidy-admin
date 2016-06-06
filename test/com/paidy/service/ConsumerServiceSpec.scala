@@ -1,6 +1,6 @@
 package service
 
-import com.paidy.domain.Consumer
+import com.paidy.domain.{Payment, Consumer}
 import com.paidy.service.ConsumerService
 import org.scalatest._
 import play.api.db.slick.DatabaseConfigProvider
@@ -21,9 +21,15 @@ class ConsumerServiceSpec extends FlatSpec with Matchers {
   lazy val consmerService = new ConsumerService(dbConfig)
 
   "ConsumerService#list" should "return list of consumers" in {
-    val consumerList = Await.result(consmerService.list, Duration.Inf)
-    consumerList.length should be > 0
-    consumerList(0) shouldBe a[Consumer]
+    val list = Await.result(consmerService.list, Duration.Inf)
+    list.length should be > 0
+    list(0) shouldBe a[Consumer]
+  }
+
+  "ConsumerService#listWithPayments" should "return list of consumers with payments" in {
+    val list = Await.result(consmerService.listWithPayments, Duration.Inf)
+    list.length should be > 0
+    list(0) shouldBe a[(Consumer, List[Payment])]
   }
 
 }

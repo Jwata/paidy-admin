@@ -14,7 +14,7 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
   class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") {
 
-    def * = (entityId, status, name.?, email, phone, createdAt, updateAt, test) <>(Consumer.tupled, Consumer.unapply)
+    def * = (entityId, status, name.?, email, phone, createdAt, updatedAt, test) <>(Consumer.tupled, Consumer.unapply)
 
     def entityId = column[String]("entity_id", O.PrimaryKey)
 
@@ -28,7 +28,7 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
     def createdAt = column[Timestamp]("created_at")
 
-    def updateAt = column[Timestamp]("created_at")
+    def updatedAt = column[Timestamp]("created_at")
 
     def test = column[Boolean]("test")
 
