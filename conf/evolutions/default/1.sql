@@ -13,10 +13,10 @@ CREATE TABLE "consumers" (
     "test" BOOLEAN NOT NULL
 );
 
-INSERT INTO "consumers" ("entity_id", "status", "name", "email", "phone", "test") VALUES
-  ('aaa', 'enabled', 'Name AAA', 'aaa@gmail.com', '11111111111', true),
-  ('bbb', 'enabled', null, 'bbb@gmail.com', '22222222222', true),
-  ('ccc', 'disabled', 'Name CCC', 'ccc@gmail.com', '33333333333', true);
+INSERT INTO "consumers" ("entity_id", "status", "name", "email", "phone", "created_at", "test") VALUES
+  ('aaa', 'enabled', 'Name AAA', 'aaa@gmail.com', '11111111111', CURRENT_TIMESTAMP + random(), true),
+  ('bbb', 'enabled', null, 'bbb@gmail.com', '22222222222', CURRENT_TIMESTAMP + random(),true),
+  ('ccc', 'disabled', 'Name CCC', 'ccc@gmail.com', '33333333333', CURRENT_TIMESTAMP + random(), true);
 
 # --- !Downs
 

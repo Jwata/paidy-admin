@@ -35,13 +35,13 @@ trait SlickPaymentRepository extends SlickBaseRepository {
     lazy val payments = TableQuery[PaymentsTable]
 
     override def byId(entityId: String): Future[Option[Payment]] = {
-      val byIdQuery = payments.filter(_.entityId === entityId).take(1).result
-      db.run(byIdQuery).map(_.headOption)
+      val byIdQuery = payments.filter(_.entityId === entityId).take(1)
+      db.run(byIdQuery.result).map(_.headOption)
     }
 
     override def byConsumerId(consumerId: String): Future[List[Payment]] = {
-      val byConsumerIdQuery = payments.filter(_.consumerId === consumerId).result
-      db.run(byConsumerIdQuery).map(_.toList)
+      val byConsumerIdQuery = payments.filter(_.consumerId === consumerId)
+      db.run(byConsumerIdQuery.result).map(_.toList)
     }
   }
 

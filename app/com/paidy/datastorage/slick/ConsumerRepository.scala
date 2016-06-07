@@ -1,6 +1,5 @@
 package com.paidy.datastorage.slick
 
-import java.sql.Timestamp
 import org.joda.time.DateTime
 
 import com.paidy.datastorage.ConsumerRepository
@@ -25,6 +24,7 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
     def email = column[String]("email")
 
+
     def phone = column[String]("phone")
 
     def createdAt = column[DateTime]("created_at")
@@ -44,11 +44,17 @@ trait SlickConsumerRepository extends SlickBaseRepository {
     }
 
     override def list(offset: Int = 0, limit: Int = 100, status: Option[String] = None): Future[List[Consumer]] = {
-      val listQuery = status match {
-        case Some(s) => consumers.filter(_.status === s).drop(offset).take(limit)
-        case None => consumers.drop(offset).take(limit)
-      }
-      db.run(listQuery.result).map(_.toList)
+      // TODO: order by DateTime using db query, fetching all data and sort them for now
+      // val listQuery = (status match {
+      //   case Some(s) => consumers.filter(_.status === s)
+      //   case None => consumers
+      // }).sortBy(_.createdAt.desc).drop(offset).take(limit)
+      val listQuery = (status match {
+        case Some(s) => consumers.filter(_.status === s)
+        case None => consumers
+      })
+      import com.github.nscala_time.time.Imports.DateTimeOrdering
+      db.run(listQuery.result).map(_.toList.sortBy(_.createdAt).reverse.drop(offset).take(limit))
     }
 
     override def count: Future[Long] = {
