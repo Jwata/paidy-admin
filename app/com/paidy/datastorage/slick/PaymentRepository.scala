@@ -26,7 +26,7 @@ trait SlickPaymentRepository extends SlickBaseRepository {
 
     def updatedAt = column[Timestamp]("created_at")
 
-    def amount = column[BigDecimal]("amount")
+    def amount = column[Int]("amount")
 
     def test = column[Boolean]("test")
 

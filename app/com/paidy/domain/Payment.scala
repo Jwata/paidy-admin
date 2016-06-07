@@ -18,7 +18,8 @@ case class Payment(
 //  updatedAt: DateTime,
   updatedAt: Timestamp,
 
-  amount: BigDecimal,
+//  amount: BigDecimal,
+  amount: Int,
 
   test: Boolean
 )
