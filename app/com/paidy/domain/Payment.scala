@@ -12,13 +12,13 @@ case class Payment(
 
   consumerId: String,
 
-//  createdAt: DateTime,
+  // TODO: use org.joda.time.DateTime instead of Timestamp
   createdAt: Timestamp,
 
-//  updatedAt: DateTime,
+  // TODO: use org.joda.time.DateTime instead of Timestamp
   updatedAt: Timestamp,
 
-//  amount: BigDecimal,
+  // TODO: use BigDecimal instead of Int
   amount: Int,
 
   test: Boolean

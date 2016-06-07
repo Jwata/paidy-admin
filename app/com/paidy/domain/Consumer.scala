@@ -8,7 +8,7 @@ case class Consumer(
 
   entityId: String,
 
-  //  status: Consumer.Status,
+  // TODO: use Consumer.Status instead of String
   status: String,
 
   name: Option[String],
@@ -17,11 +17,11 @@ case class Consumer(
 
   phone: String,
 
+  // TODO: use org.joda.time.DateTime instead of Timestamp
   createdAt: Timestamp,
-  //  createdAt: DateTime,
 
+  // TODO: use org.joda.time.DateTime instead of Timestamp
   updatedAt: Timestamp,
-  //  updatedAt: DateTime,
 
   test: Boolean
 
