@@ -1,0 +1,13 @@
+machine:
+  java:
+    version: oraclejdk8
+dependencies:
+  cache_directories:
+    - "~/.sbt/boot"
+  override:
+    - sbt update
+test:
+  override:
+    - sbt clean coverage test coverageReport coverageAggregate
+  post:
+    - sbt coveralls
