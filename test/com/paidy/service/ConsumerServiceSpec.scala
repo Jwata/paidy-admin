@@ -32,7 +32,7 @@ class ConsumerServiceSpec extends FlatSpec with Matchers {
     list(0) shouldBe a[ConsumerWithPaymentSummary]
   }
 
-  it should "return filterd consumers by given status" in {
+  it should "return filtered consumers by given status" in {
     val status = "enabled"
 
     val allList = Await.result(consmerService.listWithPaymentSummary(), Duration.Inf)

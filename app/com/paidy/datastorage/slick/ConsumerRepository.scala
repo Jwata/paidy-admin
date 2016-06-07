@@ -1,6 +1,7 @@
 package com.paidy.datastorage.slick
 
 import java.sql.Timestamp
+import org.joda.time.DateTime
 
 import com.paidy.datastorage.ConsumerRepository
 import com.paidy.domain.Consumer
@@ -12,7 +13,7 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
   import dbConfig.driver.api._
 
-  class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") {
+  class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") with SlickTimestampMapper {
 
     def * = (entityId, status, name.?, email, phone, createdAt, updatedAt, test) <>(Consumer.tupled, Consumer.unapply)
 
@@ -26,9 +27,9 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
     def phone = column[String]("phone")
 
-    def createdAt = column[Timestamp]("created_at")
+    def createdAt = column[DateTime]("created_at")
 
-    def updatedAt = column[Timestamp]("created_at")
+    def updatedAt = column[DateTime]("updated_at")
 
     def test = column[Boolean]("test")
 

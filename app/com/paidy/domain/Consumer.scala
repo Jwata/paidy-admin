@@ -1,7 +1,5 @@
 package com.paidy.domain
 
-import java.sql.Timestamp
-
 import org.joda.time.DateTime
 
 case class Consumer(
@@ -17,11 +15,9 @@ case class Consumer(
 
   phone: String,
 
-  // TODO: use org.joda.time.DateTime instead of Timestamp
-  createdAt: Timestamp,
+  createdAt: DateTime,
 
-  // TODO: use org.joda.time.DateTime instead of Timestamp
-  updatedAt: Timestamp,
+  updatedAt: DateTime,
 
   test: Boolean
 

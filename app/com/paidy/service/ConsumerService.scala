@@ -1,9 +1,9 @@
 package com.paidy.service
 
-import java.sql.Timestamp
+import org.joda.time.DateTime
 
 import com.paidy.datastorage.slick._
-import com.paidy.domain.{Payment, Consumer}
+import com.paidy.domain._
 import slick.backend.DatabaseConfig
 import slick.driver.JdbcProfile
 
@@ -45,5 +45,5 @@ case class ConsumerWithPaymentSummary(
   consumer: Consumer,
   totalAmount: Option[Int],
   averageAmount: Option[Int],
-  lastPaymentAt: Option[Timestamp]
+  lastPaymentAt: Option[DateTime]
 )

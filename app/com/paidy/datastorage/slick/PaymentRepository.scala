@@ -1,6 +1,6 @@
 package com.paidy.datastorage.slick
 
-import java.sql.Timestamp
+import org.joda.time.DateTime
 
 import com.paidy.datastorage.PaymentRepository
 import com.paidy.domain.Payment
@@ -12,9 +12,9 @@ trait SlickPaymentRepository extends SlickBaseRepository {
 
   import dbConfig.driver.api._
 
-  class PaymentsTable(tag: Tag) extends Table[Payment](tag, "payments") {
+  class PaymentsTable(tag: Tag) extends Table[Payment](tag, "payments") with SlickTimestampMapper {
 
-    def * = (entityId, merchantId, consumerId, createdAt, updatedAt, amount, test) <>(Payment.tupled, Payment.unapply)
+    def * = (entityId, merchantId, consumerId, createdAt, updatedAt, amount, test)<>(Payment.tupled, Payment.unapply)
 
     def entityId = column[String]("entity_id", O.PrimaryKey)
 
@@ -22,14 +22,13 @@ trait SlickPaymentRepository extends SlickBaseRepository {
 
     def consumerId = column[String]("consumer_id")
 
-    def createdAt = column[Timestamp]("created_at")
+    def createdAt = column[DateTime]("created_at")
 
-    def updatedAt = column[Timestamp]("created_at")
+    def updatedAt = column[DateTime]("updated_at")
 
     def amount = column[Int]("amount")
 
     def test = column[Boolean]("test")
-
   }
 
   object PaymentRepository extends PaymentRepository {
