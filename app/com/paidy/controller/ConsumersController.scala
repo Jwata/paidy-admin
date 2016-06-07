@@ -2,7 +2,9 @@ package com.paidy.controllers
 
 import javax.inject._
 import akka.actor.ActorSystem
+
 import com.paidy.service.ConsumerService
+
 import play.api._
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
@@ -16,8 +18,7 @@ class ConsumersController @Inject()(actorSystem: ActorSystem)(implicit exec: Exe
   lazy val consumerService = new ConsumerService(DatabaseConfigProvider.get[JdbcProfile](Play.current))
 
   def overview = Action.async {
-    // TODO: rendering using view
-    consumerService.listWithPaymentSummary.map { list => Ok(list.toString) }
+    consumerService.listWithPaymentSummary.map { list => Ok(views.html.overview(list)) }
   }
 
 }

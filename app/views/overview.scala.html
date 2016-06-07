@@ -1,0 +1,35 @@
+@import com.paidy.service.ConsumerWithPaymentSummary
+@(list: List[ConsumerWithPaymentSummary])
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>Paidy Admin</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>consumer_id</th>
+                    <th>status</th>
+                    <th>ltv</th>
+                    <th>last_payment_date</th>
+                    <th>average_payment_amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(c <- list) {
+                    <tr>
+                        <td>@c.consumer.entityId</td>
+                        <td>@c.consumer.status</td>
+                        <td>@c.totalAmount</td>
+                        <td>@c.lastPaymentAt</td>
+                        <td>@c.averageAmount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </body>
+</html>
