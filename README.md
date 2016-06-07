@@ -1,10 +1,5 @@
-# Paiyd assignment
+# Paidy admin
 this is an application for paidy assignment
-
-## Setup database
-```
-postgresql> CREATE DATABASE paidy_admin;
-```
 
 ## Run
 ```
