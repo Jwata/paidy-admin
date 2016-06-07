@@ -13,10 +13,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ConsumerService(val dbConfig: DatabaseConfig[JdbcProfile])
   extends SlickConsumerRepository with SlickPaymentRepository {
 
-  def list: Future[List[Consumer]] = ConsumerRepository.list()
+  def list(status: Option[String] = None): Future[List[Consumer]] = {
+    ConsumerRepository.list(status = status)
+  }
 
-  def listWithPaymentSummary: Future[List[ConsumerWithPaymentSummary]] = {
-    list.map { l =>
+  def listWithPaymentSummary(status: Option[String] = None): Future[List[ConsumerWithPaymentSummary]] = {
+    list(status = status).map { l =>
       l.map { c =>
         getPaymentsSummaryByConsumer(c)
       }

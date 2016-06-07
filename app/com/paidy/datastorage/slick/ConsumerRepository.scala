@@ -42,14 +42,17 @@ trait SlickConsumerRepository extends SlickBaseRepository {
       db.run(byIdQuery).map(_.headOption)
     }
 
-    override def list(offset: Int = 0, limit: Int = 100): Future[List[Consumer]] = {
-      val listQuery = consumers.drop(offset).take(limit).result
-      db.run(listQuery).map(_.toList)
+    override def list(offset: Int = 0, limit: Int = 100, status: Option[String] = None): Future[List[Consumer]] = {
+      val listQuery = status match {
+        case Some(s) => consumers.filter(_.status === s).drop(offset).take(limit)
+        case None => consumers.drop(offset).take(limit)
+      }
+      db.run(listQuery.result).map(_.toList)
     }
 
     override def count: Future[Long] = {
-      val countQuery = consumers.length.result
-      db.run(countQuery).map(_.toLong)
+      val countQuery = consumers.length
+      db.run(countQuery.result).map(_.toLong)
     }
   }
 

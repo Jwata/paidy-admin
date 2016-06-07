@@ -17,8 +17,8 @@ class ConsumersController @Inject()(actorSystem: ActorSystem)(implicit exec: Exe
 
   lazy val consumerService = new ConsumerService(DatabaseConfigProvider.get[JdbcProfile](Play.current))
 
-  def overview = Action.async {
-    consumerService.listWithPaymentSummary.map { list => Ok(views.html.overview(list)) }
+  def overview(status: Option[String]) = Action.async {
+    consumerService.listWithPaymentSummary(status).map { list => Ok(views.html.overview(list)) }
   }
 
 }
