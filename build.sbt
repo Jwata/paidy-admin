@@ -16,3 +16,7 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += evolutions
+
+coverageExcludedPackages := "<empty>;router.*;views.*;com.paidy.controllers.*"
+
+coverageExcludedFiles := "target/.*"
