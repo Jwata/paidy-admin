@@ -43,7 +43,7 @@ class ConsumerService(val dbConfig: DatabaseConfig[JdbcProfile])
 
 case class ConsumerWithPaymentSummary(
   consumer: Consumer,
-  totalAmount: Option[Int],
-  averageAmount: Option[Int],
+  totalAmount: Option[BigDecimal],
+  averageAmount: Option[BigDecimal],
   lastPaymentAt: Option[DateTime]
 )

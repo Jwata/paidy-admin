@@ -14,8 +14,7 @@ case class Payment(
 
   updatedAt: DateTime,
 
-  // TODO: use BigDecimal instead of Int
-  amount: Int,
+  amount: BigDecimal,
 
   test: Boolean
 )

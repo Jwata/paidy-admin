@@ -31,9 +31,9 @@
                         <tr>
                             <td>@c.consumer.entityId</td>
                             <td>@c.consumer.status</td>
-                            <td>@c.totalAmount</td>
-                            <td>@c.lastPaymentAt</td>
-                            <td>@c.averageAmount</td>
+                            <td>@c.totalAmount.getOrElse(0)</td>
+                            <td>@c.lastPaymentAt.map(_.toString("yyyy-mm-dd")).getOrElse("-")</td>
+                            <td>@c.averageAmount.getOrElse(0)</td>
                         </tr>
                     }
                 </tbody>
