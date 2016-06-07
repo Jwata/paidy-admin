@@ -3,6 +3,7 @@ package com.paidy.controllers
 import javax.inject._
 import akka.actor.ActorSystem
 
+import com.paidy.domain.Consumer
 import com.paidy.service.ConsumerService
 
 import play.api._
@@ -17,8 +18,18 @@ class ConsumersController @Inject()(actorSystem: ActorSystem)(implicit exec: Exe
 
   lazy val consumerService = new ConsumerService(DatabaseConfigProvider.get[JdbcProfile](Play.current))
 
-  def overview(status: Option[String]) = Action.async {
-    consumerService.listWithPaymentSummary(status).map { list => Ok(views.html.overview(list)) }
+  def overview(statusParam: Option[String]) = Action.async {
+    val status = statusParam.map { s => paramToConsumerStatus(s) }.getOrElse(None)
+    consumerService.listWithPaymentSummary(status).map {
+      list => Ok(views.html.overview(list))
+    }
   }
 
+  private def paramToConsumerStatus(string: String): Option[Consumer.Status] = {
+    try {
+      Some(Consumer.Status.fromString(string))
+    } catch {
+      case _ => None
+    }
+  }
 }

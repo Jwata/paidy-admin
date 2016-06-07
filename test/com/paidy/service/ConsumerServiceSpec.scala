@@ -22,16 +22,4 @@ class ConsumerServiceSpec extends UnitSpec {
     list(0) shouldBe a[ConsumerWithPaymentSummary]
   }
 
-  it should "return filtered consumers by given status" in {
-    val status = "enabled"
-
-    val allList = Await.result(consmerService.listWithPaymentSummary(), Duration.Inf)
-    val filteredList = Await.result(consmerService.listWithPaymentSummary(status = Some(status)), Duration.Inf)
-
-    filteredList.length should be < allList.length
-    filteredList.foreach { e =>
-      e.consumer.status should be equals status
-    }
-  }
-
 }

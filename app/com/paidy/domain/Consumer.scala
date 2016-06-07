@@ -6,8 +6,7 @@ case class Consumer(
 
   entityId: String,
 
-  // TODO: use Consumer.Status instead of String
-  status: String,
+  status: Consumer.Status,
 
   name: Option[String],
 
@@ -23,16 +22,23 @@ case class Consumer(
 
 )
 
-//object Consumer {
-//
-//  sealed trait Status
-//
-//  object Status {
-//
-//    case object Enabled extends Status
-//
-//    case object Disabled extends Status
-//
-//  }
-//
-//}
+object Consumer {
+
+  sealed trait Status
+
+  object Status {
+
+    case object Enabled extends Status
+
+    case object Disabled extends Status
+
+    def fromString(string: String):Status = {
+      string match  {
+        case "Enabled" => Enabled
+        case "Disabled" => Disabled
+      }
+    }
+
+  }
+
+}

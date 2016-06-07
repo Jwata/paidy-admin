@@ -14,9 +14,9 @@ CREATE TABLE "consumers" (
 );
 
 INSERT INTO "consumers" ("entity_id", "status", "name", "email", "phone", "created_at", "test") VALUES
-  ('aaa', 'enabled', 'Name AAA', 'aaa@gmail.com', '11111111111', CURRENT_TIMESTAMP + random(), true),
-  ('bbb', 'enabled', null, 'bbb@gmail.com', '22222222222', CURRENT_TIMESTAMP + random(),true),
-  ('ccc', 'disabled', 'Name CCC', 'ccc@gmail.com', '33333333333', CURRENT_TIMESTAMP + random(), true);
+  ('aaa', 'Enabled', 'Name AAA', 'aaa@gmail.com', '11111111111', CURRENT_TIMESTAMP + random(), true),
+  ('bbb', 'Enabled', null, 'bbb@gmail.com', '22222222222', CURRENT_TIMESTAMP + random(),true),
+  ('ccc', 'Disabled', 'Name CCC', 'ccc@gmail.com', '33333333333', CURRENT_TIMESTAMP + random(), true);
 
 # --- !Downs
 
