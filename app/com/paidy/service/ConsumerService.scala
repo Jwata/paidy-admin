@@ -39,6 +39,9 @@ class ConsumerService(val dbConfig: DatabaseConfig[JdbcProfile])
     }
   }
 
+  def disableById(entityId: String): Future[Int] = {
+    ConsumerRepository.disableById(entityId)
+  }
 }
 
 case class ConsumerWithPaymentSummary(

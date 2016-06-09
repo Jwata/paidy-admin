@@ -1,4 +1,5 @@
 @import com.paidy.service.ConsumerWithPaymentSummary
+@import com.paidy.domain.Consumer
 @(list: List[ConsumerWithPaymentSummary])
 
 <!DOCTYPE html>
@@ -25,6 +26,7 @@
                         <th>ltv</th>
                         <th>last_payment_date</th>
                         <th>average_payment_amount</th>
+                        <th>action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +38,15 @@
                             <td>@c.totalAmount.getOrElse(0)</td>
                             <td>@c.lastPaymentAt.map(_.toString("yyyy-mm-dd")).getOrElse("-")</td>
                             <td>@c.averageAmount.getOrElse(0)</td>
+                            @*TODO: use appropriate play form helper, and require csrf token *@
+                            <td>
+                            @if(c.consumer.status == Consumer.Status.Enabled) {
+                                <form method="POST" action="/consumers/@c.consumer.entityId/disable">
+                                    <input type="hidden" name="status" value="Disabled">
+                                    <button type="submit" class="btn btn-danger">Disable</button>
+                                </form>
+                            } else { - }
+                            </td>
                         </tr>
                     }
                 </tbody>

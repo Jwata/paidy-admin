@@ -25,6 +25,12 @@ class ConsumersController @Inject()(actorSystem: ActorSystem)(implicit exec: Exe
     }
   }
 
+  def disable(entityId: String) = Action.async { request =>
+    consumerService.disableById(entityId).map {
+      result => Redirect("/consumers/overview")
+    }
+  }
+
   private def paramToConsumerStatus(string: String): Option[Consumer.Status] = {
     try {
       Some(Consumer.Status.fromString(string))

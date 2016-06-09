@@ -1,2 +1,4 @@
 # Routes
-GET        /consumers/overview        com.paidy.controllers.ConsumersController.overview(status: Option[String])
+GET         /consumers/overview                 com.paidy.controllers.ConsumersController.overview(status: Option[String])
+
+POST        /consumers/:entityId/disable        com.paidy.controllers.ConsumersController.disable(entityId: String)
