@@ -12,11 +12,11 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
   import dbConfig.driver.api._
 
-  class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") with SlickTimestampMapper {
+  implicit def statusMapper = MappedColumnType.base[Consumer.Status, String](_.toString, stringToStatus)
 
-    implicit def statusMapper = MappedColumnType.base[Consumer.Status, String](_.toString, stringToStatus)
+  def stringToStatus(string: String) = Consumer.Status.fromString(string)
 
-    def stringToStatus(string: String) = Consumer.Status.fromString(string)
+  class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") {
 
     def * = (entityId, status, name.?, email, phone, createdAt, updatedAt, test) <>((Consumer.apply _).tupled, Consumer.unapply)
 
@@ -42,25 +42,31 @@ trait SlickConsumerRepository extends SlickBaseRepository {
     lazy val consumers = TableQuery[ConsumersTable]
 
     override def byId(entityId: String): Future[Option[Consumer]] = {
-      val byIdQuery = consumers.filter(_.entityId === entityId).take(1).result
-      db.run(byIdQuery).map(_.headOption)
+      db.run(findByIdQuery(entityId).result).map(_.headOption)
+    }
+
+    override def disableById(entityId: String): Future[Int] = {
+      val disableQuery = findByIdQuery(entityId).map(_.status).update(Consumer.Status.Disabled)
+      db.run(disableQuery)
+    }
+
+    private def findByIdQuery(entityId: String): Query[ConsumersTable, ConsumersTable#TableElementType, Seq] = {
+      consumers.filter(_.entityId === entityId).take(1)
     }
 
     override def list(offset: Int = 0, limit: Int = 100, status: Option[Consumer.Status] = None): Future[List[Consumer]] = {
-      // TODO: order by DateTime using db query, fetching all data and sort them for now
-      // TODO; filter by Consumer.Status using db query
-      val listQueryResult = status match {
-        case Some(s) => db.run(consumers.result).map(l => l.filter(_.status == s))
-        case None => db.run(consumers.result)
-      }
-      import com.github.nscala_time.time.Imports.DateTimeOrdering
-      listQueryResult.map(_.toList.sortBy(_.createdAt).reverse.drop(offset).take(limit))
+      val listQueryResult = (status match {
+        case Some(s) => consumers.filter(_.status === s)
+        case None => consumers
+      }).sortBy(_.createdAt.desc).drop(offset).take(limit).result
+      db.run(listQueryResult.map(_.toList))
     }
 
     override def count: Future[Long] = {
-      val countQuery = consumers.length
-      db.run(countQuery.result).map(_.toLong)
+      val countQuery = consumers.length.result
+      db.run(countQuery).map(_.toLong)
     }
+
   }
 
 }

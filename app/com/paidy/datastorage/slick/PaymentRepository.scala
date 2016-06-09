@@ -12,7 +12,7 @@ trait SlickPaymentRepository extends SlickBaseRepository {
 
   import dbConfig.driver.api._
 
-  class PaymentsTable(tag: Tag) extends Table[Payment](tag, "payments") with SlickTimestampMapper {
+  class PaymentsTable(tag: Tag) extends Table[Payment](tag, "payments") {
 
     def * = (entityId, merchantId, consumerId, createdAt, updatedAt, amount, test)<>(Payment.tupled, Payment.unapply)
 

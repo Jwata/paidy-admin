@@ -12,4 +12,5 @@ trait ConsumerRepository {
 
   def count: Future[Long]
 
+  def disableById(entityId: String): Future[Int]
 }
