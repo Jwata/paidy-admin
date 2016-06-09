@@ -12,7 +12,8 @@ class ConsumerServiceSpec extends UnitSpec with SpecUtility with BeforeAndAfterE
   lazy val consmerService = new ConsumerService(dbConfig)
 
   override def beforeEach() = {
-    deleteConsumerAll
+    deleteConsumersAll
+    deletePaymentsAll
     createConsumers(5)
   }
 
@@ -23,11 +24,23 @@ class ConsumerServiceSpec extends UnitSpec with SpecUtility with BeforeAndAfterE
   }
 
   "ConsumerService#listWithPayments" should "return list of consumers with payments" in {
+    val consumerId = Await.result(createConsumer, Duration.Inf)
+    createPayments(num = 5, consumerId = Some(consumerId))
+
     val list = Await.result(consmerService.listWithPaymentSummary(), Duration.Inf)
     list.length should be > 0
     list(0) shouldBe a[ConsumerWithPaymentSummary]
   }
 
-  // TODO: add more tests to be sure that requests are delegated properly
+  "ConsumerService#disableById" should "change the target's status to Disabled" in {
+    val entityId = Await.result(createConsumer, Duration.Inf)
 
+    val consumerBefore = Await.result(consmerService.list(), Duration.Inf).filter(_.entityId == entityId).head
+    consumerBefore.status shouldEqual Consumer.Status.Enabled
+
+    Await.result(consmerService.disableById(entityId), Duration.Inf)
+
+    val consumerAfter = Await.result(consmerService.list(), Duration.Inf).filter(_.entityId == entityId).head
+    consumerAfter.status shouldEqual Consumer.Status.Disabled
+  }
 }

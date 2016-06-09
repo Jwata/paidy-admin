@@ -18,7 +18,7 @@ class ConsumerRepositorySpec extends UnitSpec with SpecUtility {
   lazy val repository = new TestSlickConsumerRepository(dbConfig).ConsumerRepository
 
   override def beforeEach() = {
-    deleteConsumerAll
+    deleteConsumersAll
   }
 
   "SlickConsumerRepository#list" should "return list of consumers" in {
@@ -66,18 +66,26 @@ class ConsumerRepositorySpec extends UnitSpec with SpecUtility {
     val entityId = Await.result(createConsumer, Duration.Inf)
 
     val consumerBefore = Await.result(repository.byId(entityId), Duration.Inf).get
-    consumerBefore.status should be equals Consumer.Status.Enabled
+    consumerBefore.status shouldEqual Consumer.Status.Enabled
 
     val result = Await.result(repository.disableById(entityId), Duration.Inf)
     result shouldBe 1
 
     val consumerAfter = Await.result(repository.byId(entityId), Duration.Inf).get
-    consumerAfter.status should be equals Consumer.Status.Disabled
+    consumerAfter.status shouldEqual Consumer.Status.Disabled
   }
 
   it should "not change any resources" in {
     val entityId = randomString
     val result = Await.result(repository.disableById(entityId), Duration.Inf)
     result shouldBe 0
+  }
+
+  "SlickConsumerRepository#count" should "return number of consumers" in {
+    val num = 5
+    Await.result(createConsumers(num), Duration.Inf)
+
+    val count = Await.result(repository.count, Duration.Inf)
+    count shouldBe num
   }
 }
