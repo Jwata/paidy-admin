@@ -18,7 +18,7 @@ trait SlickConsumerRepository extends SlickBaseRepository {
 
   class ConsumersTable(tag: Tag) extends Table[Consumer](tag, "consumers") {
 
-    def * = (entityId, status, name.?, email, phone, createdAt, updatedAt, test) <>((Consumer.apply _).tupled, Consumer.unapply)
+    def * = (entityId, status, name.?, email, phone, createdAt, updatedAt, test) <>((Consumer.apply _).tupled, Consumer.unapply _)
 
     def entityId = column[String]("entity_id", O.PrimaryKey)
 
@@ -42,16 +42,20 @@ trait SlickConsumerRepository extends SlickBaseRepository {
     lazy val consumers = TableQuery[ConsumersTable]
 
     override def byId(entityId: String): Future[Option[Consumer]] = {
-      db.run(findByIdQuery(entityId).result).map(_.headOption)
+      db.run(findByIdQuery(entityId).take(1).result).map(_.headOption)
     }
 
     override def disableById(entityId: String): Future[Int] = {
-      val disableQuery = findByIdQuery(entityId).map(_.status).update(Consumer.Status.Disabled)
+      // TODO: check resource and its status if its necessary for example
+      //   - the status transitions are complicated
+      //   - it's mission critical
+      //   - it needs to change or create other resources
+      val disableQuery = findByIdQuery(entityId).map(_.status).update(Consumer.Status.Disabled).transactionally
       db.run(disableQuery)
     }
 
     private def findByIdQuery(entityId: String): Query[ConsumersTable, ConsumersTable#TableElementType, Seq] = {
-      consumers.filter(_.entityId === entityId).take(1)
+      consumers.filter(_.entityId === entityId)
     }
 
     override def list(offset: Int = 0, limit: Int = 100, status: Option[Consumer.Status] = None): Future[List[Consumer]] = {
