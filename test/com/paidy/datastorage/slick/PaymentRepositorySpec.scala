@@ -9,8 +9,6 @@ import scala.concurrent.duration.Duration
 import slick.backend.DatabaseConfig
 import slick.driver.JdbcProfile
 
-import scala.util.Random
-
 class PaymentRepositorySpec extends UnitSpec with SpecUtility {
 
   class TestSlickPaymentRepository(val dbConfig: DatabaseConfig[JdbcProfile]) extends SlickPaymentRepository
@@ -18,7 +16,8 @@ class PaymentRepositorySpec extends UnitSpec with SpecUtility {
   lazy val repository = new TestSlickPaymentRepository(dbConfig).PaymentRepository
 
   override def beforeEach() = {
-    deletePaymentsAll
+    Await.result(deletePaymentsAll, Duration.Inf)
+    Await.result(deleteConsumersAll, Duration.Inf)
   }
 
   "SlickPaymentRepository#byId" should "return a payment specified by id" in {

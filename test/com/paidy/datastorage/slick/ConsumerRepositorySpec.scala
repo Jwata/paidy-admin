@@ -18,7 +18,7 @@ class ConsumerRepositorySpec extends UnitSpec with SpecUtility {
   lazy val repository = new TestSlickConsumerRepository(dbConfig).ConsumerRepository
 
   override def beforeEach() = {
-    deleteConsumersAll
+    Await.result(deleteConsumersAll, Duration.Inf)
   }
 
   "SlickConsumerRepository#list" should "return list of consumers" in {

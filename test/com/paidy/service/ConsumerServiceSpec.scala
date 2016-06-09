@@ -12,9 +12,9 @@ class ConsumerServiceSpec extends UnitSpec with SpecUtility with BeforeAndAfterE
   lazy val consmerService = new ConsumerService(dbConfig)
 
   override def beforeEach() = {
-    deleteConsumersAll
-    deletePaymentsAll
-    createConsumers(5)
+    Await.result(deleteConsumersAll, Duration.Inf)
+    Await.result(deletePaymentsAll, Duration.Inf)
+    Await.result(createConsumers(5), Duration.Inf)
   }
 
   "ConsumerService#list" should "return list of consumers" in {
