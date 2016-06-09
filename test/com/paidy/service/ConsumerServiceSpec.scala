@@ -1,14 +1,20 @@
 package com.paidy.service
 
-import com.paidy.UnitSpec
+import com.paidy.{SpecUtility, UnitSpec}
 import com.paidy.domain.Consumer
+import org.scalatest.BeforeAndAfterEach
 
 import scala.concurrent.duration.Duration
 import scala.concurrent._
 
-class ConsumerServiceSpec extends UnitSpec {
+class ConsumerServiceSpec extends UnitSpec with SpecUtility with BeforeAndAfterEach {
 
   lazy val consmerService = new ConsumerService(dbConfig)
+
+  override def beforeEach() = {
+    deleteConsumerAll
+    createConsumers(5)
+  }
 
   "ConsumerService#list" should "return list of consumers" in {
     val list = Await.result(consmerService.list(), Duration.Inf)
@@ -21,5 +27,7 @@ class ConsumerServiceSpec extends UnitSpec {
     list.length should be > 0
     list(0) shouldBe a[ConsumerWithPaymentSummary]
   }
+
+  // TODO: add more tests to be sure that requests are delegated properly
 
 }

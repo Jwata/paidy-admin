@@ -1,60 +1,65 @@
 package com.paidy.datastorage.slick
 
-import com.paidy.UnitSpec
+import com.paidy.{SpecUtility, UnitSpec}
 import com.paidy.domain.Consumer
-import org.joda.time.DateTime
 
-import scala.concurrent.{Future, Await}
+import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.concurrent.ExecutionContext.Implicits.global
 
 import slick.backend.DatabaseConfig
 import slick.driver.JdbcProfile
 
-class ConsumerRepositorySpec extends UnitSpec {
+import scala.util.Random
 
-  class TestClass(val dbConfig: DatabaseConfig[JdbcProfile]) extends SlickConsumerRepository
+class ConsumerRepositorySpec extends UnitSpec with SpecUtility {
 
-  lazy val repository = new TestClass(dbConfig).ConsumerRepository
-  lazy val db = dbConfig.db
+  class TestSlickConsumerRepository(val dbConfig: DatabaseConfig[JdbcProfile]) extends SlickConsumerRepository
 
-  import dbConfig.driver.api._
+  lazy val repository = new TestSlickConsumerRepository(dbConfig).ConsumerRepository
 
-  def createConsumer: Future[String] = {
-    val entityId = randomString
-    val insertQuery = DBIO.seq(
-      repository.consumers += Consumer(
-        entityId, Consumer.Status.Enabled, Some(randomString), randomString, randomString, new DateTime, new DateTime, true)
-    )
-    db.run(insertQuery).map(_ => entityId)
-  }
-
-  private def randomString: String = {
-    scala.util.Random.alphanumeric.take(10).mkString
+  override def beforeEach() = {
+    deleteConsumerAll
   }
 
   "SlickConsumerRepository#list" should "return list of consumers" in {
+    val num = 5
+    Await.result(createConsumers(num), Duration.Inf)
+
     val list = Await.result(repository.list(), Duration.Inf)
-    list.length should be > 0
+    list.length shouldEqual num
     list(0) shouldBe a[Consumer]
   }
 
   it should "return list ordered by created at desc" in {
+    val num = 5
+    Await.result(createConsumers(num), Duration.Inf)
+
     val list = Await.result(repository.list(), Duration.Inf)
     import com.github.nscala_time.time.Imports.DateTimeOrdering
     list shouldBe list.sortBy(_.createdAt).reverse
   }
 
   it should "return list filtered by status" in {
-    val status = Consumer.Status.Enabled
+    val num = 5
+    Await.result(createConsumers(num), Duration.Inf)
 
     val allList = Await.result(repository.list(), Duration.Inf)
-    val filteredList = Await.result(repository.list(status = Some(status)), Duration.Inf)
+    val enabledList = Await.result(repository.list(status = Some(Consumer.Status.Enabled)), Duration.Inf)
+    val disabledList = Await.result(repository.list(status = Some(Consumer.Status.Disabled)), Duration.Inf)
+    allList.length shouldEqual num
+    enabledList.length shouldEqual num
+    disabledList.length shouldEqual 0
 
-    filteredList.length should be < allList.length
-    filteredList.foreach { c =>
-      c.status should be equals status
-    }
+    // disable a consumer
+    val targetConsumer = allList(Random.nextInt(num))
+    Await.result(repository.disableById(targetConsumer.entityId), Duration.Inf)
+
+    val allListAfter = Await.result(repository.list(), Duration.Inf)
+    val enabledListAfter = Await.result(repository.list(status = Some(Consumer.Status.Enabled)), Duration.Inf)
+    val disabledListAfter = Await.result(repository.list(status = Some(Consumer.Status.Disabled)), Duration.Inf)
+    allListAfter.length shouldEqual num
+    enabledListAfter.length shouldEqual num - 1
+    disabledListAfter.length shouldEqual 1
   }
 
   "SlickConsumerRepository#disableById" should "change consumer's status to Disabled" in {

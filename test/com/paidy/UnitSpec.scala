@@ -5,7 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import play.api.test.FakeApplication
 import slick.driver.JdbcProfile
 
-abstract class UnitSpec extends FlatSpec with Matchers {
+abstract class UnitSpec extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   lazy val app = FakeApplication(
     additionalConfiguration = Map(
